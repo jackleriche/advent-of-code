@@ -1,0 +1,17 @@
+{
+  "name": "day-3",
+  "version": "1.0.0",
+  "description": "day 3 of advent of code",
+  "main": "day3.ts",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Jack Le Riche",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  }
+}
