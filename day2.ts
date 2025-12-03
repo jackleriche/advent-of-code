@@ -2,4 +2,48 @@ const instructions = `2558912-2663749,1-19,72-85,82984-100358,86-113,193276-2376
 
 const instructionsAsArray = instructions.split(",");
 
-console.log(instructionsAsArray);
+const invalidNumberArray: number[] = [];
+
+instructionsAsArray.map((range) => {
+
+    const [min, max] = range.split("-").map(Number);    
+    let currentNumber = min;
+
+    while( currentNumber <= max ) {
+
+        const currentNumberStr = currentNumber.toString();
+
+        // removeing this as part 2 requires all possible repeats in the id
+        // jump out if the length is odd
+        // if (currentNumberStr.length % 2 !== 0) {
+        //     currentNumber++;
+        //     continue;
+        // }
+
+
+        if (isInvalidID(currentNumberStr)) {
+            invalidNumberArray.push(currentNumber);
+        }
+
+        currentNumber++;
+    }
+
+});
+
+function isInvalidID(id: string): boolean {
+  const n = id.length;
+  for (let len = 1; len <= n / 2; len++) {
+    if (n % len === 0) {
+      const part = id.slice(0, len);
+      if (id === part.repeat(n / len)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// now add all the invalid numbers together
+const invalidNumberSum = invalidNumberArray.reduce((acc, curr) => acc + curr, 0);
+
+console.log(`The sum of all invalid numbers is: ${invalidNumberSum}`);
