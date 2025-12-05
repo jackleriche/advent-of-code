@@ -152,11 +152,8 @@ export const sampleRolls = `..@@.@@@@.
 .@@@@@@@@.
 @.@.@@@.@.`.split('\n');
 
-console.log(`Sample rolls: ${sampleRolls}`);
 
 const SAMPLE_ANSWER = 13;
-
-
 let accessibleRolls: number = 0;
 const NUMBER_OF_ROLLS_ACCESSIBLE = 4;
 const ROLL = '@';
@@ -205,7 +202,7 @@ export const calculateIfRollIsSafe = (rolls: ("@" | "." | null)[][]): boolean =>
 
     }
 
-    if (count > NUMBER_OF_ROLLS_ACCESSIBLE) {
+    if (count >= NUMBER_OF_ROLLS_ACCESSIBLE) {
         return false;
     }
 
@@ -220,33 +217,50 @@ export const getAdjacentRolls = (rowIndex: number, colIndex: number, rolls: ("@"
     ];
 }
 
-const rollsMatrix = buildRollsMatrix(sampleRolls);
+const rollsMatrix = buildRollsMatrix(rolls);
+
+const replacedRolls: [number, number][] = []
 
 
-// find the two maximum values in the array
-rollsMatrix.forEach((row, rowIndex) => {
+for(;;){
+    
+    let removedRollsPerCycle = 0;
+    // find the two maximum values in the array
+    rollsMatrix.forEach((row, rowIndex) => {
 
-    // iterate through each character in the row
-    for (let col = 0; col < row.length; col++) {
+        // iterate through each character in the row
+        for (let col = 0; col < row.length; col++) {
 
-        const pointer = row[col];
+            const pointer = row[col];
 
-        console.log(`Checking roll at row ${rowIndex} and col ${col}: ${pointer}`);
-
-        if (pointer !== ROLL) {
-            continue;
+            if (pointer !== ROLL) {
+                continue;
+            }
+            
+            const adjacentRolls = getAdjacentRolls(rowIndex, col, rollsMatrix );
+            const isRollSafe = calculateIfRollIsSafe(adjacentRolls);
+            
+            if (isRollSafe) {
+                removedRollsPerCycle++;
+                replacedRolls.push([rowIndex, col]);
+            }
         }
-        
-        const adjacentRolls = getAdjacentRolls(rowIndex, col, rollsMatrix );
-        const isRollSafe = calculateIfRollIsSafe(adjacentRolls);
-        
-        if (isRollSafe) {
-            accessibleRolls++;
-        }
+    });
 
+    replacedRolls.forEach(([rowIndex, colIndex]) => {
+        rollsMatrix[rowIndex][colIndex] = '.';
+    });
+
+    accessibleRolls += removedRollsPerCycle;
+
+    if (removedRollsPerCycle === 0) {
+        break;
     }
-});
+    
+    // reset replacedRolls for the next cycle
+    replacedRolls.length = 0;
+
+}
 
 console.log(`Number of rolls acessible: ${accessibleRolls}`);
-console.log(`Sample answer: ${SAMPLE_ANSWER}`);
 
