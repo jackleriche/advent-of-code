@@ -221,8 +221,8 @@ const rollsMatrix = buildRollsMatrix(rolls);
 
 const replacedRolls: [number, number][] = []
 
-
-for(;;){
+let rollsFound = true;
+while (rollsFound) {
     
     let removedRollsPerCycle = 0;
     // find the two maximum values in the array
@@ -254,7 +254,7 @@ for(;;){
     accessibleRolls += removedRollsPerCycle;
 
     if (removedRollsPerCycle === 0) {
-        break;
+        rollsFound = false;
     }
     
     // reset replacedRolls for the next cycle
